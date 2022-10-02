@@ -7,6 +7,11 @@ namespace Booking.Controllers
 {
     public class ReservationController : ControllerBase
     {
+        // private readonly DataContext _context;
+        // public ReservationController(DataContext context) =>
+        //     _context = context;
+
+            
         private static List<Reservation> reservations = new List<Reservation>();
 
         //registrar reserva
@@ -17,30 +22,22 @@ namespace Booking.Controllers
 
             var room = RoomController.rooms.FirstOrDefault
             (
-                u => u.id.Equals(regReservation.id)
+                u => u.roomType.Equals(regReservation.room)
             );
 
-            if (room != null)
-            {
-                var roomDate = ReservationController.reservations.FirstOrDefault(
-                d => d.dateIn.Equals(regReservation.dateIn)
-                );
+            if (room == null)
+                return NotFound();
 
-                if (roomDate.Equals(regReservation.dateIn))
-                    return NotFound();
+            var reservation = new Reservation();
+            reservation.room = regReservation.room;
+            reservation.dateIn = regReservation.dateIn;
+            reservation.dateOut = regReservation.dateOut;
+            reservation.cpf = regReservation.cpf;
+            reservation.guestNo = regReservation.guestNo;
+            reservation.guestName = regReservation.guestName;
+            reservations.Add(reservation);
 
-                var reservation = new Reservation();
-                reservation.room = regReservation.room;
-                reservation.dateIn = regReservation.dateIn;
-                reservation.dateOut = regReservation.dateOut;
-                reservation.cpf = regReservation.cpf;
-                reservation.guestNo = regReservation.guestNo;
-                reservation.guestName = regReservation.guestName;
-                reservations.Add(reservation);
-
-                return Created("", reservation);
-            }
-            return NotFound();
+            return Created("", reservation);
 
         }
 

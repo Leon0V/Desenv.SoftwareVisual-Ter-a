@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Booking.Validations;
 
 namespace Booking
 {
@@ -8,7 +9,10 @@ namespace Booking
     {
         public int roomType { get; set; }
         public Room room { get; set; }
-        private int id { get; set; }
+
+        [Key]
+        public string id => generateID();
+
         [Required(ErrorMessage = "O campo CPF é obrigatório!")]
         [StringLength(11, MinimumLength = 11,
         ErrorMessage = "O campo CPF deve conter 11 caracteres!"
@@ -40,6 +44,11 @@ namespace Booking
         private double getDuration()
         {
             return (dateOut - dateIn).TotalDays;
+        }
+
+        public string generateID()
+        {
+            return Guid.NewGuid().ToString().Substring(0,3);
         }
     }
 }

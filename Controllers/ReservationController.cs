@@ -35,15 +35,16 @@ namespace Booking.Controllers
 
                 if
                 (
-                _context.Reservations
+                    !_context.Reservations
 
+                    .Where
+                    (
+                        x => regReservation.dateIn >= x.dateIn && regReservation.dateIn < x.dateOut ||
+                        regReservation.dateOut > x.dateIn && regReservation.dateOut <= x.dateOut
+                    )
 
-                // .Where(x => x.dateIn < regReservation.dateIn && x.dateOut <= regReservation.dateIn)
-                // .Where(x => regReservation.dateIn >= x.dateOut || (regReservation.dateIn < x.dateIn && x.dateIn >= regReservation.dateOut))
-                .Where(x => (regReservation.dateIn >= x.dateOut) || (regReservation.dateIn < x.dateIn && regReservation.dateOut <= x.dateIn))
-
-                .Where(x => x.roomId == availableRoom.id)
-                .Any() || !_context.Reservations.Any(x => x.roomId == availableRoom.id)
+                    .Where(x => x.roomId == availableRoom.id)
+                    .Any() || !_context.Reservations.Any(x => x.roomId == availableRoom.id)
                 )
                 {
                     room = availableRoom;

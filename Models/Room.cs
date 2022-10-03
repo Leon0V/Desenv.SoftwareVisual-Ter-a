@@ -1,16 +1,19 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Booking.Validations;
 
 namespace Booking
 {
     public class Room
     {
+        // [Key]
+        // public string id => generateID();
+
         [Key]
-        public string id => generateID();
+        public int id { get; set; }
 
         [Range(1, 3, ErrorMessage = "O Tipo do quarto necessita estar entre {1} e {2}.")]
         public int roomType { get; set; }
+        public string roomName { get; set; }
         public double roomRate => getRate();
 
         private double getRate()
@@ -23,9 +26,9 @@ namespace Booking
                 return 200;
         }
 
-        public string generateID()
+        private string generateID()
         {
-            return Guid.NewGuid().ToString().Substring(0,3);
+            return Guid.NewGuid().ToString().Substring(0, 4);
         }
     }
 }

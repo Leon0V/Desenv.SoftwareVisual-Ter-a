@@ -1,20 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
+using Booking.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Controllers
 {
     public class RoomController : ControllerBase
     {
-        public static List<Room> rooms = new List<Room>();
+        private readonly DataContext _context;
+        public RoomController(DataContext context) =>
+            _context = context;
 
 
         //registrar quarto
         [HttpPost]
         [Route("register")]
-        public IActionResult Register([FromBody] Room room)
+        public IActionResult Register([FromBody] RegRoom regRoom)
         {
-            rooms.Add(room);
+            var room = new Room
+            {
+                roomName = regRoom.roomName,
+                roomType = regRoom.roomType
+            };
+            _context.Rooms.Add(room);
+            _context.SaveChanges();
             return Created("", room);
         }
 
@@ -23,7 +32,8 @@ namespace Booking.Controllers
         [Route("list")]
         public IActionResult List()
         {
-            return Ok(rooms);
+            return Ok(_context.Rooms.ToList());
+
         }
 
         // //buscar quarto
